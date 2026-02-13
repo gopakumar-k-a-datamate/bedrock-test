@@ -29,11 +29,11 @@ public class StudentController {
     }
 
 
-    @PostMapping
-    public String register(@RequestBody RegisterStudentRequest request) {
-        registerStudentUseCase.execute(request);
-        return "Student registered successfully!";
-    }
+//    @PostMapping
+//    public String register(@RequestBody RegisterStudentRequest request) {
+//        registerStudentUseCase.execute(request);
+//        return "Student registered successfully!";
+//    }
 
     @GetMapping("/{id}")
     public Student getById(@PathVariable String id) {

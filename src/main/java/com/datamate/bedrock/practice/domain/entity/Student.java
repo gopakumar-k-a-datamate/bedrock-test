@@ -19,14 +19,17 @@ public class Student {
     @Embedded
     private Email email;
 
+    private String password;
+
     protected Student() {
     }
 
     // Constructor for creating a new student
-    public Student(String name, Email email) {
+    public Student(String name, Email email,String password) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     // Business Logic can go here
@@ -49,4 +52,5 @@ public class Student {
     public UUID getId() { return id; }
     public String getName() { return name; }
     public String getEmail() { return email.value(); }
+    public String getPassword(){return password;}
 }

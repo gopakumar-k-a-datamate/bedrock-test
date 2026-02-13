@@ -6,23 +6,26 @@ import com.datamate.bedrock.practice.domain.entity.Student;
 import com.datamate.bedrock.practice.domain.repository.StudentRepository;
 import com.datamate.bedrock.practice.domain.valueobject.Email;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Service
 public class RegisterStudentUseCase {
     private final StudentRepository repository;
-
-    public RegisterStudentUseCase(StudentRepository repository) {
+    private final PasswordEncoder passwordEncoder;
+    public RegisterStudentUseCase(StudentRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public void execute(RegisterStudentRequest request) {
-        // 1. Convert primitive String to Value Object (Validation happens here)
+
         Email email = new Email(request.email());
 
-        // 2. Create the Domain Entity
-        Student student = new Student(request.name(), email);
+        String encodedPassword = passwordEncoder.encode(request.password());
 
-        // 3. Persist using the interface (we don't know it's a DB yet)
+        Student student = new Student(request.name(), email,encodedPassword);
+
         repository.save(student);
 
         System.out.println("Student registered with ID: " + student.getId());

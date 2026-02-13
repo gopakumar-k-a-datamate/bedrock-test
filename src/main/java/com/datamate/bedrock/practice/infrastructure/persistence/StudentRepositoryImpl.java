@@ -2,7 +2,10 @@ package com.datamate.bedrock.practice.infrastructure.persistence;
 
 import com.datamate.bedrock.practice.domain.entity.Student;
 import com.datamate.bedrock.practice.domain.repository.StudentRepository;
+import com.datamate.bedrock.practice.domain.valueobject.Email;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
 
@@ -40,5 +43,13 @@ public class StudentRepositoryImpl implements StudentRepository{
             // Log error or ignore if ID is invalid format
         }
     }
+
+    @Override
+    public Optional<Student> findByEmail(Email email){
+
+          return  studentJpaRepository.findByEmail(email);
+
+    }
+
 
 }
