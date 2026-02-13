@@ -1,7 +1,12 @@
 package com.datamate.bedrock.practice.presentation.controller;
 
 import com.datamate.bedrock.practice.application.dto.RegisterStudentRequest;
+import com.datamate.bedrock.practice.application.dto.UpdateStudentRequest;
+import com.datamate.bedrock.practice.application.usecase.DeleteStudentUseCase;
+import com.datamate.bedrock.practice.application.usecase.GetStudentUseCase;
 import com.datamate.bedrock.practice.application.usecase.RegisterStudentUseCase;
+import com.datamate.bedrock.practice.application.usecase.UpdateStudentUseCase;
+import com.datamate.bedrock.practice.domain.entity.Student;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -9,15 +14,20 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
     private final RegisterStudentUseCase registerStudentUseCase;
+    private final GetStudentUseCase getStudentUseCase;
+    private final DeleteStudentUseCase deleteStudentUseCase;
+    private final UpdateStudentUseCase updateStudentUseCase;
 
-    public StudentController(RegisterStudentUseCase registerStudentUseCase) {
+    public StudentController(RegisterStudentUseCase registerStudentUseCase,
+                             GetStudentUseCase getStudentUseCase,
+                             DeleteStudentUseCase deleteStudentUseCase,
+                             UpdateStudentUseCase updateStudentUseCase) {
         this.registerStudentUseCase = registerStudentUseCase;
+        this.getStudentUseCase=getStudentUseCase;
+        this.deleteStudentUseCase=deleteStudentUseCase;
+        this.updateStudentUseCase=updateStudentUseCase;
     }
 
-    @GetMapping()
-    public String helloWord(){
-        return "hello world";
-    }
 
     @PostMapping
     public String register(@RequestBody RegisterStudentRequest request) {
@@ -25,6 +35,22 @@ public class StudentController {
         return "Student registered successfully!";
     }
 
+    @GetMapping("/{id}")
+    public Student getById(@PathVariable String id) {
+        return getStudentUseCase.getStudentById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable String id) {
+        deleteStudentUseCase.execute(id);
+        return "Student deleted successfully";
+    }
+
+    @PutMapping("/{id}")
+    public String updateStudent(@PathVariable String id, @RequestBody UpdateStudentRequest request) {
+        updateStudentUseCase.execute(id, request);
+        return "Student updated successfully";
+    }
 
 
 }

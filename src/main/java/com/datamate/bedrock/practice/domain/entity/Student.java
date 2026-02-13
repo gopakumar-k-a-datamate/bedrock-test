@@ -35,6 +35,16 @@ public class Student {
         this.name = newName;
     }
 
+    public void updateEmail(Email newEmail){
+        if(newEmail==null) throw new IllegalArgumentException("Email cannot be empty");
+        this.email = newEmail;
+    }
+
+    public void updateEmail(String emailString) {
+        // Validation happens inside the Email constructor automatically!
+        this.updateEmail(new Email(emailString));
+    }
+
     // Getters
     public UUID getId() { return id; }
     public String getName() { return name; }

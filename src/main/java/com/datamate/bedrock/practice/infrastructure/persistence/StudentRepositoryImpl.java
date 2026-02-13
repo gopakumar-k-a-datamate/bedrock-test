@@ -3,7 +3,8 @@ package com.datamate.bedrock.practice.infrastructure.persistence;
 import com.datamate.bedrock.practice.domain.entity.Student;
 import com.datamate.bedrock.practice.domain.repository.StudentRepository;
 import org.springframework.stereotype.Repository;
-
+import java.util.UUID;
+import java.util.List;
 
 
 @Repository
@@ -23,7 +24,21 @@ public class StudentRepositoryImpl implements StudentRepository{
     @Override
     public Student findById(String id) {
 
-        return studentJpaRepository.findById(id);
+        return studentJpaRepository.findById(UUID.fromString(id)) .orElse(null);
+    }
+
+    @Override
+    public List<Student> findAll() {
+        return studentJpaRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(String id) {
+        try {
+            studentJpaRepository.deleteById(UUID.fromString(id));
+        } catch (IllegalArgumentException e) {
+            // Log error or ignore if ID is invalid format
+        }
     }
 
 }
