@@ -9,13 +9,14 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
 
-
 @Repository
-public class StudentRepositoryImpl implements StudentRepository{
+public class StudentRepositoryImpl implements StudentRepository {
 
     private final StudentJpaRepository studentJpaRepository;
 
-    public StudentRepositoryImpl(StudentJpaRepository studentJpaRepository) {this.studentJpaRepository = studentJpaRepository;}
+    public StudentRepositoryImpl(StudentJpaRepository studentJpaRepository) {
+        this.studentJpaRepository = studentJpaRepository;
+    }
 
     @Override
     public void save(Student student) {
@@ -27,7 +28,7 @@ public class StudentRepositoryImpl implements StudentRepository{
     @Override
     public Student findById(String id) {
 
-        return studentJpaRepository.findById(UUID.fromString(id)) .orElse(null);
+        return studentJpaRepository.findById(UUID.fromString(id)).orElse(null);
     }
 
     @Override
@@ -45,11 +46,13 @@ public class StudentRepositoryImpl implements StudentRepository{
     }
 
     @Override
-    public Optional<Student> findByEmail(Email email){
-
-          return  studentJpaRepository.findByEmail(email);
-
+    public Optional<Student> findByEmail(Email email) {
+        return studentJpaRepository.findByEmail(email);
     }
 
+    @Override
+    public boolean existsByEmail(Email email) {
+        return studentJpaRepository.existsByEmail(email);
+    }
 
 }

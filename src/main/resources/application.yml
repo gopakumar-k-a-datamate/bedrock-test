@@ -1,4 +1,17 @@
 ﻿spring:
+  main:
+    allow-bean-definition-overriding: true
+  mail:
+    host: localhost
+    port: 1025
+    username: null
+    password: null
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
   application:
     name: bedrock
   cloud:
@@ -17,7 +30,25 @@
     properties:
       hibernate:
         format_sql: true
+        org.hibernate.envers.audit_table_suffix: _AUD
+        org.hibernate.envers.default_schema: audit
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
+bedrock:
+  auditing:
+    flow:
+      async-enabled: false
+    entity:
+      enabled: true
+      strategy: envers
+  security:
+    authorization:
+      public-paths:
+        - "/api/audit/**"
 server:
   port: 8081
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    com.datamate.bedrock: DEBUG

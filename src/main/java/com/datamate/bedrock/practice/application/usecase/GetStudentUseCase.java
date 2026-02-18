@@ -9,8 +9,8 @@ public class GetStudentUseCase {
 
     private final StudentRepository repository;
 
-    public GetStudentUseCase(StudentRepository repository){
-        this.repository=repository;
+    public GetStudentUseCase(StudentRepository repository) {
+        this.repository = repository;
     }
 
     public Student getStudentById(String id) {

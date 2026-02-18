@@ -8,8 +8,14 @@ import java.util.Optional;
 
 public interface StudentRepository {
     void save(Student student);
+
     Student findById(String id);
+
     List<Student> findAll();
+
     void deleteById(String id);
+
     Optional<Student> findByEmail(Email email);
+
+    boolean existsByEmail(Email email);
 }

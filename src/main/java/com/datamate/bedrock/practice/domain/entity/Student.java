@@ -8,12 +8,15 @@ import jakarta.persistence.Table;
 
 import java.util.UUID;
 
+import com.datamate.bedrock.framework.common.auditing.annotation.AuditEntity;
+
 @Entity
-@Table(name="students")
+@AuditEntity
+@Table(name = "students")
 public class Student {
 
     @Id
-    private  UUID id;
+    private UUID id;
     private String name;
 
     @Embedded
@@ -25,7 +28,7 @@ public class Student {
     }
 
     // Constructor for creating a new student
-    public Student(String name, Email email,String password) {
+    public Student(String name, Email email, String password) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
@@ -34,12 +37,14 @@ public class Student {
 
     // Business Logic can go here
     public void updateName(String newName) {
-        if(newName.isBlank()) throw new IllegalArgumentException("Name cannot be empty");
+        if (newName.isBlank())
+            throw new IllegalArgumentException("Name cannot be empty");
         this.name = newName;
     }
 
-    public void updateEmail(Email newEmail){
-        if(newEmail==null) throw new IllegalArgumentException("Email cannot be empty");
+    public void updateEmail(Email newEmail) {
+        if (newEmail == null)
+            throw new IllegalArgumentException("Email cannot be empty");
         this.email = newEmail;
     }
 
@@ -49,8 +54,19 @@ public class Student {
     }
 
     // Getters
-    public UUID getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email.value(); }
-    public String getPassword(){return password;}
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email.value();
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }
