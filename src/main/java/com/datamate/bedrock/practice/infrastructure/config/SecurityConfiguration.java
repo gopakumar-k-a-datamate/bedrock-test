@@ -11,18 +11,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.datamate.bedrock.framework.common.security.jwt.filter.JwtAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity(debug = true)
+// @Configuration
+// @EnableWebSecurity(debug = true)
 public class SecurityConfiguration {
-
-        @Bean
-        public org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer webSecurityCustomizer() {
-                return (web) -> web.ignoring().requestMatchers(
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/api/v1/auth/**");
-        }
 
         private final AuthenticationProvider authenticationProvider;
         private final JwtAuthenticationFilter jwtAuthFilter;

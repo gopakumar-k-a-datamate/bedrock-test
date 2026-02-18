@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 //import com.datamate.bedrock.framework.security.jwt.service.JwtTokenService;
+import com.datamate.bedrock.framework.common.logging.annotation.EnableLogger;
+import com.datamate.bedrock.framework.common.logging.service.Logger;
 import com.datamate.bedrock.framework.common.security.jwt.service.JwtTokenService;
 
 import java.util.Collections;
@@ -22,6 +24,9 @@ import com.datamate.bedrock.practice.domain.valueobject.AuthenticationResult;
 
 @Service
 public class LoginUseCase {
+
+        @EnableLogger
+        private Logger logger;
 
         private final AuthenticationManager authenticationManager;
         private final StudentRepository repository;
@@ -37,16 +42,16 @@ public class LoginUseCase {
 
         @AuditLog(action = "LOGIN_STUDENT", resource = "STUDENT", resourceId = "#request.username")
         public AuthenticationResult execute(AuthenticationRequest request) {
-                System.out.println("1. LoginUseCase started for: " + request.username());
+                logger.info("1. LoginUseCase started for: {}", request.username());
                 try {
-                        System.out.println("2. Calling AuthenticationManager...");
+                        logger.debug("2. Calling AuthenticationManager...");
                         authenticationManager.authenticate(
                                         new UsernamePasswordAuthenticationToken(request.username(),
                                                         request.password()));
-                        System.out.println("3. Authentication Successful!");
+                        logger.info("3. Authentication Successful!");
 
                 } catch (Exception e) {
-                        System.out.println("❌ Authentication Failed: " + e.getMessage());
+                        logger.error("❌ Authentication Failed: {}", e.getMessage());
                         return AuthenticationResult.failure("INVALID_CREDENTIALS", "Invalid username or password");
                 }
 
@@ -65,13 +70,13 @@ public class LoginUseCase {
                                 "" // lastName
                 );
 
-                System.out.println("4. Generating Bedrock Tokens...");
+                logger.debug("4. Generating Bedrock Tokens...");
                 String accessToken = jwtTokenService.generateAccessToken(bedrockUser);
                 // Assuming jwtTokenService has generateRefreshToken, if not I will use
                 // accessToken as placeholder or just implement what is available
                 String refreshToken = jwtTokenService.generateRefreshToken(bedrockUser);
 
-                System.out.println("5. Tokens Generated Successfully");
+                logger.info("5. Tokens Generated Successfully");
 
                 return AuthenticationResult.success(accessToken, refreshToken, bedrockUser);
         }

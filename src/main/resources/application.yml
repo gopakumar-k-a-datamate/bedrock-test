@@ -41,9 +41,43 @@ bedrock:
       enabled: true
       strategy: envers
   security:
-    authorization:
-      public-paths:
-        - "/api/audit/**"
+    enabled: true
+    # authorization:
+    #   public-paths:
+    #     - "/api/audit/**"
+    permit-all:
+      - "/v3/api-docs"
+      - "/v3/api-docs/**"
+      - "/swagger-ui"
+      - "/swagger-ui/**"
+      - "/swagger-ui.html"
+      - "/swagger-resources/**"
+      - "/actuator/**"
+      - "/api/v1/auth/**"
+      - "/api/audit/**"
+      - "/api/v1/student/greet"
+  logging:
+    enabled: true
+    level: INFO
+    file:
+      enabled: true
+      path: "./logs"
+      name: "bedrock-app.log"
+  monitoring:
+    enabled: true
+    implementation: prometheus
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+
 server:
   port: 8081
 

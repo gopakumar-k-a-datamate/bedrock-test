@@ -8,8 +8,11 @@ import com.datamate.bedrock.practice.application.usecase.RegisterStudentUseCase;
 import com.datamate.bedrock.practice.application.usecase.UpdateStudentUseCase;
 import com.datamate.bedrock.practice.domain.entity.Student;
 import com.datamate.bedrock.framework.common.auditing.annotation.AuditLog;
+import com.datamate.bedrock.framework.common.monitoring.service.MetricsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,15 +23,21 @@ public class StudentController {
     private final GetStudentUseCase getStudentUseCase;
     private final DeleteStudentUseCase deleteStudentUseCase;
     private final UpdateStudentUseCase updateStudentUseCase;
+    private final MetricsService metricsService;
+    private final MessageSource messageSource;
 
     public StudentController(RegisterStudentUseCase registerStudentUseCase,
             GetStudentUseCase getStudentUseCase,
             DeleteStudentUseCase deleteStudentUseCase,
-            UpdateStudentUseCase updateStudentUseCase) {
+            UpdateStudentUseCase updateStudentUseCase,
+            MetricsService metricsService,
+            MessageSource messageSource) {
         this.registerStudentUseCase = registerStudentUseCase;
         this.getStudentUseCase = getStudentUseCase;
         this.deleteStudentUseCase = deleteStudentUseCase;
         this.updateStudentUseCase = updateStudentUseCase;
+        this.metricsService = metricsService;
+        this.messageSource = messageSource;
     }
 
     // @PostMapping
@@ -39,11 +48,25 @@ public class StudentController {
 
     private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
+    @GetMapping("/greet")
+    public String greet() {
+        return messageSource.getMessage("student.greeting", null,
+                LocaleContextHolder.getLocale());
+    }
+
     @AuditLog(action = "GET_STUDENT", resource = "STUDENT", resourceId = "#id")
     @GetMapping("/{id}")
     public Student getById(@PathVariable String id) {
         logger.info("StudentController: getById called with id: {}", id);
-        return getStudentUseCase.getStudentById(id);
+        metricsService.incrementCounter("bedrock.student.get.requests");
+        try {
+            Student student = getStudentUseCase.getStudentById(id);
+            metricsService.incrementCounter("bedrock.student.get.success");
+            return student;
+        } catch (Exception e) {
+            metricsService.incrementCounter("bedrock.student.get.error");
+            throw e;
+        }
     }
 
     @AuditLog(action = "DELETE_STUDENT", resource = "STUDENT", resourceId = "#id")
